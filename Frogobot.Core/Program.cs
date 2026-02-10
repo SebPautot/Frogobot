@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Frogobot.Data;
+using Frogobot.Data.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NetCord.Hosting.Gateway;
 using NetCord.Hosting.Services;
@@ -17,11 +21,28 @@ internal class Program
 			builder.Configuration.AddUserSecrets<Program>();
 		}
 
+		// Frogobot Data
+		builder.Services.AddDbContextPool<FrogoContext>(options =>
+		{
+			options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ??
+			                  "Data Source=frogobot.db");
+		});
+		
+		builder.Services.AddScoped<IPossessPointService, PossessPointService>();
+
+		// Discord Bot
 		builder.Services
 			.AddDiscordGateway()
 			.AddApplicationCommands();
 		
 		var app = builder.Build();
+
+		// TODO : temp, replace by migrations later
+		using (var scope = app.Services.CreateScope())
+		{
+			var db = scope.ServiceProvider.GetRequiredService<FrogoContext>();
+			await db.Database.EnsureCreatedAsync();
+		}
 
 		app.AddModules(typeof(Program).Assembly);
 
