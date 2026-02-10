@@ -14,7 +14,7 @@ public class PossessPointService : IPossessPointService
 		_dbContext = dbContext;
 	}
 
-	public async Task AddPossessPointAsync(ulong userId)
+	public async Task<int> AddPossessPointAsync(ulong userId)
 	{
 		var user = await _dbContext.Users.FindAsync(userId);
 		if (user is null)
@@ -25,6 +25,7 @@ public class PossessPointService : IPossessPointService
 		
 		user.PossessPoints++;
 		await _dbContext.SaveChangesAsync();
+		return user.PossessPoints;
 	}
 
 	public async Task<PossessScoreboardRank[]> GetPossessScoreboardAsync(int limit = 10)
