@@ -1,9 +1,24 @@
-﻿namespace Frogobot.Core;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using NetCord.Hosting.Gateway;
 
-class Program
+namespace Frogobot.Core;
+
+internal class Program
 {
-	static void Main(string[] args)
+	public static async Task Main(string[] args)
 	{
-		Console.WriteLine("Hello, World!");
+		var builder = Host.CreateApplicationBuilder(args);
+
+		if (builder.Environment.IsDevelopment())
+		{
+			builder.Configuration.AddUserSecrets<Program>();
+		}
+
+		builder.Services.AddDiscordGateway();
+		
+		var app = builder.Build();
+
+		await app.RunAsync();
 	}
 }
