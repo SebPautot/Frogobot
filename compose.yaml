@@ -1,0 +1,7 @@
+﻿services:
+  frogobot.core:
+    image: frogobot.core
+    build:
+      context: .
+      dockerfile: Frogobot.Core/Dockerfile
+
