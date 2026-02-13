@@ -37,7 +37,8 @@ public class PossessPointMessageHandler : IMessageCreateGatewayHandler
 		if (result.ContainsPossessSlime)
 		{
 			await message.AddReactionAsync(EmojiUtils.GetReactionEmojiFrom(_emojiOptions.PossessPoint));
-			await possessPointService.AddPossessPointAsync(message.Author.Id);
+			var total = await possessPointService.AddPossessPointAsync(message.Author.Id);
+			await message.ReplyAsync($"{message.Author} a mentionné Possesslime ! {_emojiOptions.PossessPoint}\nIl a maintenant **{total} Possess-Points**.");
 		}
 		else if (result.ContainsSlime)
 		{
