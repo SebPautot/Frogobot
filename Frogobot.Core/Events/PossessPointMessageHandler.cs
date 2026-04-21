@@ -72,9 +72,23 @@ public class PossessPointMessageHandler : IMessageCreateGatewayHandler
 	{
 		/// <summary> Whether the message contains any of the magic words. </summary>
 		public bool HasMatch => ContainsSlime || ContainsPossessSlime || ContainsAnakin;
-		
+
 		public bool ContainsSlime { get; set; }
 		public bool ContainsPossessSlime { get; set; }
 		public bool ContainsAnakin { get; set; }
+	}
+
+	public struct MessageEventCheck
+	{
+		string[] stringMatchExact = [];
+		string[] stringMathPartial = [];
+		bool consumeEvent = true;
+		MessageEventCheckResponse[] responses = [];
+	}
+
+	public struct MessageEventCheckResponse
+	{
+		ReactionEmojiProperties reaction = null;
+		string message = "";
 	}
 }
